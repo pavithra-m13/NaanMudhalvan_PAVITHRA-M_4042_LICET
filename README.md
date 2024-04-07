@@ -2,6 +2,7 @@
 # Project Name: MusicBeats
 
 #Description
+
 MusicBeats is a web app built with Django, offering easy access to a diverse range of songs, including popular hits. Users can listen to songs, download MP3 files, and create playlists effortlessly. With its user-friendly interface and responsive design, MusicBeats aims to make music discovery and enjoyment seamless for all users.
 
 # Features
