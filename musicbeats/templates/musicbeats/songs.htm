@@ -1,0 +1,46 @@
+{% extends 'musicbeats/basic.htm' %}
+{% block title %}All Songs{% endblock %}
+
+{% block body %}
+
+<br>
+<br>
+<br>
+<div class="container">
+  <div class="row">
+    {% for i in song reversed %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ i.image }}" class="card-img-top img-fluid" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-3" style="color: green; font-weight: bold; font-size: 1.4rem;">{{ i.name }}</h5>
+            <p class="card-text" style="font-size: 1rem;"><strong>Tags:</strong> {{ i.tags }}</p>
+            <p class="card-text" style="font-size: 1rem;"><strong>Movie:</strong> {{ i.movie }}</p>
+            {% if user.is_authenticated %}
+              <form action="/musicbeats/history" method="POST">{% csrf_token %}
+                <input type="hidden" name="music_id" value="{{ i.song_id }}">
+                <button type="submit" class="btn btn-outline-danger btn-lg">Listen Song</button>
+              </form>
+            {% else %}
+              <a href="/musicbeats/songs/{{ i.song_id }}" class="btn btn-outline-danger btn-lg">Listen Song</a>
+            {% endif %}
+          </div>
+        </div>
+        <br>
+        <br>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  body{
+    background-color: #350647;
+    
+  }
+  .card-img-top {
+    height: 200px; /* Adjust the height as needed */
+    object-fit: cover; /* Maintain aspect ratio and crop the image if necessary */
+  }
+</style>
+{% endblock %}

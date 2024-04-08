@@ -1,0 +1,91 @@
+{% extends 'musicbeats/basic.htm' %}
+{% block title %}SignUp{% endblock %}
+
+{% block body %}
+<div class="signup-container" style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;margin-left:400px"> <!-- Add a class to distinguish the sign-up container -->
+  <form action="/musicbeats/signup" method="POST">
+    {% csrf_token %}
+    <div style="text-align: center;">
+      <h1 class="login-title" style="color: #350647; font-size: 24px; margin-bottom: 20px;">Sign Up</h1>
+      <!-- Change the image source to your desired image -->
+      <img src="/static/musicbeats/register.webp" alt="Image" style="width: 100px; height: 100px; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto; border: #000  solid 1px ;">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputEmail1" style="color: #350647;">Email address</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="email" placeholder="name@example.com">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputUsername" style="color: #350647;">Username</label>
+      <input type="text" class="form-control" id="exampleInputUsername" name="username" placeholder="Your Username">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputFirstname" style="color: #350647;">First Name</label>
+      <input type="text" class="form-control" id="exampleInputFirstname" name="firstname" placeholder="Your First Name">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputLastname" style="color: #350647;">Last Name</label>
+      <input type="text" class="form-control" id="exampleInputLastname" name="lastname" placeholder="Your Last Name">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1" style="color: #350647;">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" name="pass1" placeholder="Password">
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword2" style="color: #350647;">Confirm Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword2" name="pass2" placeholder="Confirm Password">
+    </div>
+    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign Up</button>
+  </form>
+</div>
+
+<style>
+  /* CSS for styling the sign-up page */
+  body {
+    background-color:  #bd9acc; /* Background color */
+    color: #000; /* Text color */
+  }
+
+  .signup-container { /* Style specific to the sign-up container */
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    margin-top: 120px;
+    border: 2px solid #333; /* Dark border */
+    border-radius: 10px;
+    width: 500px; /* Increased width */
+    height: auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5); /* Add box shadow for depth */
+  }
+
+  .login-title {
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+    margin-left:-100px;
+  }
+  .form-control {
+    width: 150%; /* Full width minus padding and border */
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc; /* Light border */
+}
+
+
+  .btn-primary {
+    background-color: #ac58ce; /* Purple button background */
+    border: none;
+    color: #fff; /* White text color */
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    background-color: #b98eca; /* Darker blue on hover */
+  }
+</style>
+{% endblock %}

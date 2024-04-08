@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your custom CSS file -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="/media/images/soundmanagerv297a-20170601/script/soundmanager2.js"></script>
+    <title>{% block title %} {% endblock %}</title>
+    <style>
+        /* styles.css */
+        .navbar-brand img {
+            margin-right: 5px; /* Adjust as needed */
+        }
+        
+        .navbar-nav .nav-link {
+            color: #F5F5F5; /* Set text color to dark white */
+        }
+        
+        .form-control {
+            background-color: white; /* Set background color of search bar to white */
+            color: black; /* Set text color of search bar to black */
+        }
+
+        /* Styling for specific elements */
+        .navbar-brand {
+            font-weight: bold; /* Make the brand name bold */
+            font-size: 24px; /* Adjust the font size as needed */
+            color: #FF5733; /* Set a custom color */
+        }
+
+        .nav-link-home {
+          background-color: #350647; /* Set a custom background color */
+          border-color: #350647; /* Set a custom border color */
+          color: white; /* Set text color to white */
+          font-weight: bold; /* Make the text bold */
+          font-size: 16px; /* Adjust the font size as needed */
+          padding: 8px 10px; /* Add padding */
+           /* Add border radius */
+          margin-right: 5px; /* Add margin to create space */
+          border-radius: 3px;
+        }
+
+        .nav-link-home:hover {
+          background-color: #bd9acc; /* Change background color on hover */
+          border-color: #bd9acc; /* Change border color on hover */
+        }
+
+        .btn-login, .btn-signup {
+            background-color: #350647; /* Set a custom background color */
+            border-color: #350647; /* Set a custom border color */
+            color: white; /* Set text color to white */
+            font-weight: bold; /* Make the text bold */
+            font-size: 16px; /* Adjust the font size as needed */
+            padding: 8px 15px; /* Add padding */
+
+        }
+
+        .btn-login:hover, .btn-signup:hover {
+            background-color: #bd9acc; /* Change background color on hover */
+            border-color: #bd9acc; /* Change border color on hover */
+        }
+        .form-control.search-box {
+          border-color: purple; /* Set border color to purple */
+      }
+      
+    </style>
+</head>
+<body>
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-light w-100 fixed-top" >
+    <a class="navbar-brand"  href="/">
+      <img src="/static/musicbeats/logo1.avif" width="60" height="60" class="d-inline-block align-top rounded-circle" alt="">
+      <h7  style="color: #350647; margin-top: 100px; font-size:larger;">MusicBeats</h7>
+  
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link nav-link-home" href="/">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link nav-link-home" href="/musicbeats/songs/">All Songs</a>
+            </li>
+            <!-- Add more links as needed -->
+        </ul>
+        
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-1 search-box" id="searchInput" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="search()">Search</button>
+        </form>
+        
+        {% if user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" style="color:#350647;" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome {{ request.user }}</a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="/musicbeats/c/{{ request.user }}">Your Channel</a>
+                  <a class="dropdown-item" href="/musicbeats/upload">Upload Music</a>
+                  <a class="dropdown-item" href="/musicbeats/watchlater">Listen Later</a>
+                  <a class="dropdown-item" href="/musicbeats/history">History</a>
+                  <a class="dropdown-item" href="#" onclick="logout()">Logout</a>
+              </div>
+          </li>
+          
+        </ul>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script>
+            function logout() {
+                Swal.fire({
+                title: 'Are you sure you want to log out?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: '<i class="fas fa-check-circle"></i> Yes',
+                cancelButtonText: '<i class="fas fa-times-circle"></i> No'
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    document.location = "/musicbeats/logout_user";
+                }
+                });
+            }
+
+            function search() {
+                var searchQuery = document.getElementById('searchInput').value.trim();
+                if (searchQuery !== '') {
+                    fetch('/musicbeats/search/?q=' + searchQuery)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                    });
+                }
+            }
+
+            function displaySearchResults(results) {
+                var searchResultsDiv = document.getElementById('searchResults');
+                searchResultsDiv.innerHTML = '';
+
+                if (results.length > 0) {
+                    // Display search results
+                    searchResultsDiv.style.display = 'block'; // Show the search results container
+                    results.forEach(song => {
+                        var cardDiv = document.createElement('div');
+                        cardDiv.className = 'col-md-4 mb-4';
+                        cardDiv.innerHTML = `
+                            <div class="card">
+                                <img src="${song.image}" class="card-img-top" alt="...">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title mb-3" style="color: green; font-weight: bold; font-size: 1.4rem;">${song.name}</h5>
+                                    <p class="card-text" style="font-size: 1rem;"><strong>Tags:</strong> ${song.tags}</p>
+                                    <p class="card-text" style="font-size: 1rem;"><strong>Movie:</strong> ${song.movie}</p>
+                                    <a href="/musicbeats/songs/${song.song_id}" class="btn btn-outline-danger btn-lg">Listen Song</a>  
+                                </div>
+                            </div>
+                        `;
+                        searchResultsDiv.appendChild(cardDiv);
+                    });
+                } else {
+                    // Hide search results if no results found
+                    searchResultsDiv.style.display = 'none';
+                }
+            }
+        </script>
+        {% else %}
+            <div class="my-2" style="padding-left: 1%;">
+                <a href="/musicbeats/login"><button class="btn btn-sm btn-login">Login</button></a> <!-- Changed color to black -->
+                <a href="/musicbeats/signup"><button class="btn btn-sm btn-signup">Signup</button></a> <!-- Changed color to black -->
+            </div>
+        {% endif %}
+    </div>
+</nav>
+<br>
+
+<!-- Your existing HTML code -->
+<!-- Add an empty div for search results with an ID -->
+<br>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-12" id="searchResults" style="display: none;"> <!-- Initially hide the search results -->
+            <!-- Search results will be displayed here -->
+        </div>
+    </div>
+</div>
+{% block body %}
+<!-- Your existing body content -->
+{% endblock %}
+
+<!-- Your existing HTML code -->
+<br>
+<br>
+<footer class="footer mt-auto py-3" style="background-color:white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5>About Us</h5>
+                <p>Welcome to MusicBeats! We are passionate about bringing music lovers together and providing a platform to discover, share, and enjoy great music from all around the world.</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Quick Links</h5>
+                <ul class="list-unstyled">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Songs</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h5>Contact Us</h5>
+                <p>Email: info@example.com</p>
+                <p>Phone: +1 234 567 890</p>
+                <p>Address: 123 Main Street, City, Country</p>
+                <!-- Social media links -->
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-square"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fab fa-twitter-square"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fab fa-instagram-square"></i></a></li>
+                    <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin"></i></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Copyright symbol -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p>&copy; 2024 MusicBeats. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

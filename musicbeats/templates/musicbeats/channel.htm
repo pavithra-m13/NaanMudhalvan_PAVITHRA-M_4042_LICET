@@ -1,0 +1,85 @@
+{% extends 'musicbeats/basic.htm' %}
+
+{% block title %}Channel Songs{% endblock %}
+
+{% block body %}
+<style>
+    /* CSS for styling the channel songs page */
+    /* CSS for styling the card layout */
+.card {
+  border: none; /* Remove default card border */
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1); /* Add box shadow for depth */
+}
+
+.card-title {
+  color: green; /* Set card title color */
+  font-weight: bold; /* Set card title font weight */
+  font-size: 1.4rem; /* Set card title font size */
+}
+
+.card-text {
+  font-size: 1rem; /* Set card text font size */
+}
+
+.card-img-top {
+  border-radius: 10px 10px 0 0; /* Add border radius only to top corners of card image */
+  width: 100%; /* Set image width to span entire width of card */
+}
+
+.card-body {
+  padding: 20px; /* Add padding to card body */
+}
+
+.btn-listen-song {
+  font-size: 1rem; /* Set button font size */
+  border-radius: 10px; /* Add border radius to button */
+}
+
+.btn-listen-song:hover {
+  background-color: #f8d7da; /* Change background color on hover */
+}
+
+    body{
+      background-color: #350647;
+    }
+
+    
+</style>
+
+<br>
+<br>
+<br>
+<br>
+<h2 style="text-align: center; padding-top: 2%; color: rgb(218, 16, 16);">Channel: {{ channel.name }}</h2>
+
+<div class="container">
+  <div class="row">
+    {% for i in song reversed %}
+      <div class="col-md-4 mb-4">
+        <div class="card">
+          <img src="{{ i.image }}" class="card-img-top img-fluid" alt="...">
+          <div class="card-body text-center">
+            <h5 class="card-title mb-3" style="color: green; font-weight: bold; font-size: 1.4rem;">{{ i.name }}</h5>
+            <p class="card-text" style="font-size: 1rem;"><strong>Tags:</strong> {{ i.tags }}</p>
+            <p class="card-text" style="font-size: 1rem;"><strong>Movie:</strong> {{ i.movie }}</p>
+            {% if user.is_authenticated %}
+              <form action="/musicbeats/history" method="POST">{% csrf_token %}
+                <input type="hidden" name="music_id" value="{{ i.song_id }}">
+                <button type="submit" class="btn btn-outline-danger btn-lg">Listen Song</button>
+              </form>
+            {% else %}
+              <a href="/musicbeats/songs/{{ i.song_id }}" class="btn btn-outline-danger btn-lg">Listen Song</a>
+            {% endif %}
+          </div>
+        </div>
+        <br>
+        <br>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<br>
+<br>
+<br>
+{% endblock %}
